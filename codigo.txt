@@ -1,0 +1,33 @@
+import pytesseract
+from PIL import Image, ImageEnhance, ImageOps
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+image_path = list(uploaded.keys())[0] 
+image = Image.open(image_path)
+
+gray_image = ImageOps.grayscale(image)
+
+enhancer_contrast = ImageEnhance.Contrast(gray_image)
+image_contrast = enhancer_contrast.enhance(1.8) 
+
+enhancer_brightness = ImageEnhance.Brightness(image_contrast)
+image_bright = enhancer_brightness.enhance(1.2)  
+
+img_np = np.array(image_bright)
+
+img_resized = cv2.resize(img_np, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
+
+_, img_binarized = cv2.threshold(img_resized, 200, 255, cv2.THRESH_BINARY)
+
+img_cleaned = cv2.GaussianBlur(img_binarized, (3, 3), 0)
+
+recognized_text = pytesseract.image_to_string(img_cleaned)
+
+plt.imshow(img_cleaned, cmap='gray')
+plt.axis('off') 
+plt.show()
+
+print("Texto reconhecido:")
+print(recognized_text)
