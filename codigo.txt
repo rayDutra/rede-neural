@@ -1,3 +1,9 @@
+!apt-get install tesseract-ocr
+!pip install pytesseract Pillow
+
+from google.colab import files
+uploaded = files.upload()
+
 import pytesseract
 from PIL import Image, ImageEnhance, ImageOps
 import cv2
